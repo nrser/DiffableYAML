@@ -4,7 +4,12 @@ module DiffableYAML
   # this dumps YAML with hashes / dicts in a consistent order so that
   # text diffs make more sense
   class DiffableYAMLTree < Psych::Visitors::YAMLTree
-    PRE = ['label', 'type']
+    def self.create options = {}, emitter = nil
+      preorder = options.delete(:preorder) || []
+      instance = Psych::Visitors::YAMLTree.create options, emitter
+      instance.instance_variable_set '@preorder', preorder
+      instance
+    end
 
     def visit_Hash o
       tag      = o.class == ::Hash ? nil : "!ruby/hash:#{o.class}"
@@ -15,14 +20,18 @@ module DiffableYAML
                                           implicit, 
                                           Psych::Nodes::Mapping::BLOCK))
 
-      PRE.each do |key|
+      @preorder.each do |key|
         if o.key? key
           accept key
           accept o[key]
         end
       end
-      o.keys.sort.each do |k|
-        unless PRE.include? k
+      o.keys.map {|k|
+        [k, k.to_s]
+      }.sort {|(k_a, s_a), (k_b, s_b)|
+        s_a <=> s_b
+      }.each do |k, s|
+        unless @preorder.include? k
           accept k
           accept o[k]
         end
@@ -87,7 +96,7 @@ module DiffableYAML
       io      = nil
     end
 
-    visitor = DiffableYAMLTree.new options
+    visitor = DiffableYAMLTree.create options
     visitor << o
     visitor.tree.yaml io, options
   end
