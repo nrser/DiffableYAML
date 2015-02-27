@@ -1,4 +1,4 @@
-require 'yaml'
+require 'psych'
 
 module DiffableYAML
   # this dumps YAML with hashes / dicts in a consistent order so that
