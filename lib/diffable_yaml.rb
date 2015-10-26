@@ -1,5 +1,7 @@
 require 'psych'
 
+require 'diffable_yaml/version'
+
 module DiffableYAML
   # this dumps YAML with hashes / dicts in a consistent order so that
   # text diffs make more sense
