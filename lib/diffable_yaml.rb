@@ -8,7 +8,7 @@ module DiffableYAML
   class DiffableYAMLTree < Psych::Visitors::YAMLTree
     def self.create options = {}, emitter = nil
       preorder = options.delete(:preorder) || []
-      instance = Psych::Visitors::YAMLTree.create options, emitter
+      instance = super options, emitter
       instance.instance_variable_set '@preorder', preorder
       instance
     end
@@ -17,9 +17,9 @@ module DiffableYAML
       tag      = o.class == ::Hash ? nil : "!ruby/hash:#{o.class}"
       implicit = !tag
 
-      register(o, @emitter.start_mapping( nil, 
-                                          tag, 
-                                          implicit, 
+      register(o, @emitter.start_mapping( nil,
+                                          tag,
+                                          implicit,
                                           Psych::Nodes::Mapping::BLOCK))
 
       @preorder.each do |key|
@@ -73,15 +73,15 @@ module DiffableYAML
         maptag = '!ruby/string'
         maptag << ":#{o.class}" unless o.class == ::String
 
-        register o, @emitter.start_mapping( nil, 
-                                            maptag, 
-                                            false, 
+        register o, @emitter.start_mapping( nil,
+                                            maptag,
+                                            false,
                                             Pysch::Nodes::Mapping::BLOCK)
-        @emitter.scalar 'str', 
-                        nil, 
-                        nil, 
-                        true, 
-                        false, 
+        @emitter.scalar 'str',
+                        nil,
+                        nil,
+                        true,
+                        false,
                         Psych::Nodes::Scalar::ANY
         @emitter.scalar str, nil, tag, plain, quote, style
 

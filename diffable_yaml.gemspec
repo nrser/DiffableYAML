@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 this is a little chunck of code i use to dump Ruby objects to YAML with Hash
 keys in a some-what consistent order.
 
-i do this because i often find myself using YAML files as data storage and 
+i do this because i often find myself using YAML files as data storage and
 this makes it a lot easier to compare versions with text-based diff toolspec.
 
 this lib is horribly alpha and has no tests what-so-ever. i'm sure it's
@@ -27,14 +27,16 @@ against at the moment.
 EOS
   spec.homepage      = 'https://github.com/nrser/DiffableYAML'
   spec.license       = 'BSD'
-  
+
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  
+
   spec.add_dependency 'psych', '~> 2.0'
-  
+
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "nrser"
 end
